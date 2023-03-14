@@ -1,20 +1,19 @@
-mapboxgl.accessToken =
-"pk.eyJ1IjoicmFuZWdyYXkiLCJhIjoiY2xmOGt3ODN3MXIzbzQxbzFsMDlrM3hkcSJ9.jRlBZgbKJitnGlHsgR91sg";
+import token from "./important.js";
+mapboxgl.accessToken = token;
 
 // add current user location to add pin from there
-// const userLocation = navigator.geolocation.getCurrentPosition();
-
-const map = new mapboxgl.Map({
-    container: "map",
-    style: "mapbox://styles/mapbox/outdoors-v12",
-    center: [-96, 37.8],
-    zoom: 4,
+const userLocation = navigator.geolocation.getCurrentPosition((position) => {
+  console.log('success')
+  let data = [position.coords.latitude, position.coords.longitude];
 });
 
-// const mapEl = document.querySelector('#map')
-// mapEl.addEventListener('dblclick', (event) => {
-//     console.log(event)
-// })
+const map = new mapboxgl.Map({
+  container: "map",
+  style: "mapbox://styles/mapbox/outdoors-v12",
+  center: userLocation ? userLocation : [-96, 37.8],
+  zoom: 4,
+});
+
 let geojson = {
   type: "FeatureCollection",
   features: [],
@@ -33,7 +32,7 @@ if (localStorage.getItem("pins")) {
   });
 }
 
-map.on("click", (e) => {
+map.on("contextmenu", (e) => {
   console.log(e);
 
   let data = checkExisting(e);
